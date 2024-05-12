@@ -7,39 +7,57 @@ const userMessage = document.getElementById('mensaje');
 
 const boton = document.getElementById('enviar');
 
+const botonBorrar=document.getElementById('botonBorrar');
+
+
+botonBorrar.addEventListener('click',borrarStorage);
 
 boton.addEventListener('click',onSubmit);
+
+
+function clearTextFields() {
+  userName.value = '';
+  userEmail.value = '';
+   userMessage.value = '';
+ }
+
+
+function borrarStorage(event){
+    event.preventDefault()
+    localStorage.clear()
+}
+
+
+let i=0;
+            
+let array=[];
 
 
 function onSubmit(event) {
 
     event.preventDefault();
 
-    const nameValue = userName.value;
-    const emailValue = userEmail.value;
-    const messageValue = userMessage.value;
+        localStorage.setItem('usuario'+i,JSON.stringify({
+            name: userName.value,
+            email:userEmail.value,
+            message: userMessage.value
+        }));
 
+        array.push(JSON.parse( localStorage.getItem('usuario'+i) ) )
 
-    localStorage.setItem('usuario',JSON.stringify({
-        name: nameValue,
-        email:emailValue,
-        message: messageValue
-    }));
-
-
-    const user = JSON.parse(localStorage.getItem('usuario'));
-
-    const textoNombre= document.getElementById('pNombre');
-    const textoEmail= document.getElementById('pEmail');
-    const textoMensaje=document.getElementById('pMensaje');
+        const elemento = document.createElement('p')
+        document.body.appendChild(elemento)
     
-    textoNombre.innerText = user.name; 
-    textoEmail.innerText = user.email; 
-    textoMensaje.innerText = user.message; 
+        //creo la variable que recogerá de nuevo los datos asociados a nuestra nueva clave
+        const data = JSON.parse(localStorage.getItem('usuario'+i))
 
+        //busco el último elemento en body (el párrafo que se acaba de crear) y le agrego los campos recogidos
+        document.body.lastElementChild.innerText = `${data.name} ${data.email} ${data.message}`;
+
+    i++;
+
+    clearTextFields();
 }
-
-
 
 
 /*Bonus: Guardar en Local Storage los datos de contacto enviados de cada usuario (ir guardandolos todos)
